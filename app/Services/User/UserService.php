@@ -44,20 +44,44 @@ class UserService{
 
     // Create
     public function create($body){
+        try{
         
-        $validated = $body->validate([
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'email' => 'required|string',
-            'password' => 'required|string',
-            'profile_picture'=>'nullable|string'
-        ]);
-
-        $validated['profile_picture'] = $validated['profile_picture'] ?? 'https://random.imagecdn.app/500/10';
-
-        // dd($validated['profile_picture']);
-        $newUser = User::create($validated);
-        return redirect()->route('user.list');
+            $validated = $body->validate([
+                'first_name' => 'required|string',
+                'last_name' => 'required|string',
+                'email' => 'required|string',
+                'password' => 'required|string',
+                'profile_picture'=>'nullable|string'
+            ]);
+    
+            $validated['profile_picture'] = $validated['profile_picture'] ?? 'https://random.imagecdn.app/500/10';    
+            throw new \Exception("Error Processing Request", 1);
+            $newUser = User::create([
+                "first_name" => $body['first_name'],
+                "last_name" => $body['last_name'],
+                "email" => $body['email'],
+                "password" => $body['password'],
+    
+            ]);
+            // $users = [
+            //         "first_name" => "John",
+            //         "last_name" => "Doe",
+            //         "email" => "jh@mail.com"
+            // ];
+            
+    
+            return response()->json([
+                "status"=>true,
+                "message" => "User created successfully",
+                "data" => $newUser
+            ]);
+        }catch(\Exception $e){
+            return response()->json([
+                "status"=>false,
+                "message" => "User creation failed",
+                "data" => $e->getMessage()
+            ]);
+        }
     }
 
     //Update getter

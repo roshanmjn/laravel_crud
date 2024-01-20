@@ -16,7 +16,9 @@ use App\Http\Controllers\UserController;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-
+Route::get('/', function(){
+    return view('welcome');
+});
 Route::get('/id/{id?}', [UserController::class, 'index']); 
 Route::get('/create', function(){
     return view('users.create');
@@ -25,7 +27,15 @@ Route::get('/login', function () {
     return view('users.login');
 });
 
-Route::middleware('jwt.auth')->get('/list', [UserController::class, 'list']);
+
+Route::middleware('verifyJwt')->group(function(){
+    Route::get('/dashboard',function(){
+        return view('users.dashboard',['user'=>auth()->user()]);
+    });
+    Route::get('/list', [UserController::class, 'list']);
+    Route::get('/logout', [UserController::class, 'logout']);
+});
+
 
 Route::prefix('/api/v1')->group(function () {
 

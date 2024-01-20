@@ -59,7 +59,7 @@
         </ul>
     </div>
     @endif
-    <form method="post" action="{{route('user.save')}}">
+    <form method="post" action="{{route('user.create')}}">
         @csrf
         @method('post')
 

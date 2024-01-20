@@ -50,10 +50,9 @@
     </style>
 </head>
 <body>
-
-<form method="POST" action="{{ route('user.login') }}">
-    @csrf
-
+<div>
+<div id='loginResult'></div>
+<form id="login" method="POST">
     <label for="email">Email:</label>
     <input type="text" name="email" >
 
@@ -62,6 +61,30 @@
 
     <button type="submit">Login</button>
 </form>
+</div>
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#login').submit(function (e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('user.login') }}", 
+                data: formData,
+                success: function (response) {
+                    $('#loginResult').html(response);
+                    console.log(response)
+                    window.location.href = "/dashboard";
+                },
+                error: function (error) {
+                    console.log(error)
+                    $('#loginResult').html('Error: ' + error.responseText);
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
