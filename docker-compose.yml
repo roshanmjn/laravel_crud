@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+
+  laravel:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: laravel_crud
+    container_name: laravel_crud_con
+    volumes:
+      - .:/var/www/html
+    networks:
+      - laravel_app_network
+    ports:
+      - 8000:8000
+
+    
+  mariadb:
+    image: mariadb
+    restart: always
+    container_name: mariadb_con
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    # volumes:
+    #   - mariadb:/var/lib/mysql
+    networks:
+      - laravel_app_network
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+
+networks:
+  laravel_app_network:
+    external: true
+
+## volumes:
+  ## mariadb:
